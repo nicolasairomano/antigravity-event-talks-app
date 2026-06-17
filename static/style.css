@@ -847,3 +847,95 @@ body {
         justify-content: center;
     }
 }
+
+/* --- Icon Buttons --- */
+.btn-icon {
+    padding: 0 !important;
+    width: 38px;
+    height: 38px;
+    border-radius: 50% !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+/* --- Light Mode Variable Overrides --- */
+:root[data-theme="light"] {
+    --bg-color: #F1F5F9;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-border: rgba(15, 23, 42, 0.08);
+    --card-border-hover: rgba(59, 130, 246, 0.3);
+    
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #64748B;
+    
+    --card-selected-glow: rgba(59, 130, 246, 0.12);
+}
+
+:root[data-theme="light"] .glass-bg {
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.02) 0%, transparent 50%);
+}
+
+:root[data-theme="light"] .logo-text h1 span {
+    background: linear-gradient(90deg, #1E40AF, #4338CA);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="light"] #search-input,
+:root[data-theme="light"] #tweet-textarea {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(15, 23, 42, 0.15);
+    color: #0F172A;
+}
+
+:root[data-theme="light"] #search-input:focus,
+:root[data-theme="light"] #tweet-textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.15);
+}
+
+:root[data-theme="light"] .filter-checkbox {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+:root[data-theme="light"] .filter-checkbox:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="light"] .filter-count {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+}
+
+:root[data-theme="light"] .card-body code {
+    background: rgba(15, 23, 42, 0.06);
+    color: #0F172A;
+}
+
+:root[data-theme="light"] .card-body pre {
+    background: rgba(15, 23, 42, 0.03);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="light"] .card-body strong {
+    color: #0F172A;
+}
+
+:root[data-theme="light"] .btn-secondary {
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #475569;
+}
+
+:root[data-theme="light"] .btn-secondary:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.08);
+    color: #0F172A;
+}
+

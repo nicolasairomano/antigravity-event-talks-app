@@ -23,9 +23,19 @@ const tweetSelectedBtn = document.getElementById('tweet-selected-btn');
 const clearSelectionBtn = document.getElementById('clear-selection-btn');
 const toastContainer = document.getElementById('toast-container');
 const exportCsvBtn = document.getElementById('export-csv-btn');
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+const themeToggleIcon = document.getElementById('theme-toggle-icon');
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        if (themeToggleIcon) {
+            themeToggleIcon.className = 'fa-solid fa-sun';
+        }
+    }
     fetchReleaseNotes();
     setupEventListeners();
 });
@@ -61,6 +71,11 @@ function setupEventListeners() {
     // Export CSV listener
     if (exportCsvBtn) {
         exportCsvBtn.addEventListener('click', exportToCsv);
+    }
+
+    // Theme Toggle listener
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', toggleTheme);
     }
 }
 
@@ -586,4 +601,24 @@ function showToast(message, type = 'info') {
     setTimeout(() => {
         toast.remove();
     }, 4000);
+}
+
+// --- Theme Toggle ---
+function toggleTheme() {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'dark');
+        if (themeToggleIcon) {
+            themeToggleIcon.className = 'fa-solid fa-moon';
+        }
+        showToast('Swapped to Dark Mode', 'success');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        if (themeToggleIcon) {
+            themeToggleIcon.className = 'fa-solid fa-sun';
+        }
+        showToast('Swapped to Light Mode', 'success');
+    }
 }
