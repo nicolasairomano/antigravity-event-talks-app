@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Notes Hub & Social Compiler</title>
+    <meta name="description" content="Stay up-to-date with Google BigQuery release notes, filter updates, and compile summaries to tweet directly.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>BigQuery <span>Release Hub</span></h1>
+                    <p>Track, filter, and share Google BigQuery updates instantly</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button id="refresh-btn" class="btn btn-primary" title="Refresh Release Notes">
+                    <i class="fa-solid fa-arrows-rotate" id="refresh-icon"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Layout -->
+        <div class="main-layout">
+            <!-- Sidebar for Filters and Multi-select compilation -->
+            <aside class="sidebar-panel">
+                <div class="widget search-widget">
+                    <h3><i class="fa-solid fa-magnifying-glass"></i> Search Updates</h3>
+                    <div class="input-wrapper">
+                        <input type="text" id="search-input" placeholder="Search keywords...">
+                        <i class="fa-solid fa-xmark clear-search" id="clear-search-btn"></i>
+                    </div>
+                </div>
+
+                <div class="widget filter-widget">
+                    <h3><i class="fa-solid fa-tags"></i> Filter Categories</h3>
+                    <div class="filter-options" id="category-filters">
+                        <!-- Dynamic categories will be generated here -->
+                        <div class="skeleton-filters">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tweet Compiler Panel -->
+                <div class="widget compiler-widget" id="compiler-panel">
+                    <div class="compiler-header">
+                        <h3><i class="fa-brands fa-x-twitter"></i> Tweet Compiler</h3>
+                        <span class="badge selection-count-badge" id="selection-count">0 Selected</span>
+                    </div>
+                    <p class="compiler-help">Select multiple updates from the list to compile a custom combined update thread or summary tweet.</p>
+                    
+                    <div class="compiled-preview-area">
+                        <label for="tweet-textarea">Preview Tweet Text:</label>
+                        <textarea id="tweet-textarea" rows="6" maxlength="280" placeholder="Select updates to populate your Tweet summary..."></textarea>
+                        <div class="char-counter">
+                            <span id="char-count">0</span>/280
+                        </div>
+                    </div>
+                    
+                    <div class="compiler-actions">
+                        <button id="tweet-selected-btn" class="btn btn-twitter btn-full" disabled>
+                            <i class="fa-brands fa-x-twitter"></i> Tweet Selected
+                        </button>
+                        <button id="clear-selection-btn" class="btn btn-secondary btn-full" disabled>
+                            Clear Selection
+                        </button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Stream of release notes -->
+            <main class="stream-panel">
+                <!-- Status/Toast Notification Banner -->
+                <div id="toast-container"></div>
+                
+                <div class="stream-header">
+                    <div class="stream-info">
+                        <h2 id="stream-title">All Release Notes</h2>
+                        <span class="note-count" id="results-count">Loading updates...</span>
+                    </div>
+                    <div class="sorting-controls">
+                        <label for="sort-select">Sort by:</label>
+                        <select id="sort-select">
+                            <option value="newest" selected>Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Release Notes Cards Container -->
+                <div class="cards-container" id="cards-container">
+                    <!-- Skeleton Cards for Loading State -->
+                    <div class="skeleton-card">
+                        <div class="skeleton-header">
+                            <div class="skeleton-badge"></div>
+                            <div class="skeleton-date"></div>
+                        </div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                        </div>
+                        <div class="skeleton-footer"></div>
+                    </div>
+                    <div class="skeleton-card">
+                        <div class="skeleton-header">
+                            <div class="skeleton-badge"></div>
+                            <div class="skeleton-date"></div>
+                        </div>
+                        <div class="skeleton-body">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line"></div>
+                        </div>
+                        <div class="skeleton-footer"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
