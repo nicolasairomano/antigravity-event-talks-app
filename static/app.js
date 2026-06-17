@@ -22,6 +22,7 @@ const selectionCount = document.getElementById('selection-count');
 const tweetSelectedBtn = document.getElementById('tweet-selected-btn');
 const clearSelectionBtn = document.getElementById('clear-selection-btn');
 const toastContainer = document.getElementById('toast-container');
+const exportCsvBtn = document.getElementById('export-csv-btn');
 
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
@@ -56,6 +57,11 @@ function setupEventListeners() {
     tweetTextarea.addEventListener('input', updateCharCount);
     tweetSelectedBtn.addEventListener('click', tweetSelected);
     clearSelectionBtn.addEventListener('click', clearSelection);
+
+    // Export CSV listener
+    if (exportCsvBtn) {
+        exportCsvBtn.addEventListener('click', exportToCsv);
+    }
 }
 
 // --- Fetch Data ---
@@ -216,6 +222,10 @@ function renderCards() {
     cardsContainer.innerHTML = '';
     resultsCount.textContent = `${filteredUpdates.length} update${filteredUpdates.length !== 1 ? 's' : ''} found`;
     
+    if (exportCsvBtn) {
+        exportCsvBtn.disabled = filteredUpdates.length === 0;
+    }
+    
     if (filteredUpdates.length === 0) {
         cardsContainer.innerHTML = `
             <div class="empty-state">
@@ -250,6 +260,9 @@ function renderCards() {
                 ${update.html}
             </div>
             <div class="card-actions">
+                <button class="btn btn-secondary btn-sm copy-text-btn" data-text="${update.text.replace(/"/g, '&quot;')}">
+                    <i class="fa-regular fa-clipboard"></i> Copy Text
+                </button>
                 <button class="btn btn-secondary btn-sm copy-link-btn" data-link="${update.link}">
                     <i class="fa-regular fa-copy"></i> Copy Link
                 </button>
@@ -265,6 +278,15 @@ function renderCards() {
                 return; // Let links and actions function normally
             }
             toggleSelection(update.id, card);
+        });
+        
+        // Copy text button handler
+        card.querySelector('.copy-text-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const text = e.currentTarget.dataset.text;
+            navigator.clipboard.writeText(text)
+                .then(() => showToast('Update text copied to clipboard!', 'success'))
+                .catch(() => showToast('Failed to copy text.', 'error'));
         });
         
         // Copy link button handler
@@ -291,6 +313,45 @@ function renderCards() {
         
         cardsContainer.appendChild(card);
     });
+}
+
+// --- Export to CSV ---
+function exportToCsv() {
+    if (filteredUpdates.length === 0) return;
+    
+    let csvContent = "\ufeffDate,Category,Text Summary,URL\n";
+    
+    filteredUpdates.forEach(update => {
+        const escapeCsv = (val) => {
+            if (val === null || val === undefined) return '';
+            let formatted = val.toString().replace(/"/g, '""');
+            if (formatted.includes(',') || formatted.includes('\n') || formatted.includes('"')) {
+                formatted = `"${formatted}"`;
+            }
+            return formatted;
+        };
+        
+        const row = [
+            escapeCsv(update.date),
+            escapeCsv(update.category),
+            escapeCsv(update.text),
+            escapeCsv(update.link)
+        ].join(',');
+        
+        csvContent += row + "\n";
+    });
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `bigquery_release_notes_${new Date().toISOString().slice(0,10)}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    showToast('Exported filtered updates to CSV!', 'success');
 }
 
 // Helper: Badge color mapping
@@ -457,6 +518,9 @@ function tweetSingleCard(id) {
 function showLoadingState() {
     refreshIcon.classList.add('spinning');
     refreshBtn.disabled = true;
+    if (exportCsvBtn) {
+        exportCsvBtn.disabled = true;
+    }
     
     // Clear dynamic filters
     categoryFilters.innerHTML = `
